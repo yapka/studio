@@ -2,10 +2,10 @@
 
 import { SidebarHeader, SidebarContent, SidebarGroup, SidebarGroupLabel, SidebarSeparator } from '@/components/ui/sidebar';
 import LayerManager from './layer-manager';
-import DataUploader from './data-uploader';
 import type { MapLayer } from '@/lib/types';
 import { Globe, Layers } from 'lucide-react';
 import StyleEditor from './style-editor';
+import GeoserverLayerAdder from './geoserver-layer-adder';
 
 type AppSidebarProps = {
   layers: MapLayer[];
@@ -46,7 +46,7 @@ export default function AppSidebar({
                 <Layers className="h-4 w-4" />
                 Couches de données
             </SidebarGroupLabel>
-            <DataUploader onAddLayer={onAddLayer} />
+            <GeoserverLayerAdder onAddLayer={onAddLayer} />
             <LayerManager
                 layers={layers}
                 onRemoveLayer={onRemoveLayer}
