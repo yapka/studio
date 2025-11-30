@@ -22,12 +22,12 @@ export default function DataUploader({ onAddLayer }: DataUploaderProps) {
     reader.onload = e => {
       try {
         const text = e.target?.result;
-        if (typeof text !== 'string') throw new Error('Failed to read file.');
+        if (typeof text !== 'string') throw new Error('Échec de la lecture du fichier.');
         
         const data = JSON.parse(text);
         
         if (data.type !== 'FeatureCollection') {
-            throw new Error('Invalid GeoJSON: Must be a FeatureCollection.');
+            throw new Error('GeoJSON invalide : Doit être une FeatureCollection.');
         }
 
         onAddLayer({
@@ -41,16 +41,16 @@ export default function DataUploader({ onAddLayer }: DataUploaderProps) {
           },
         });
         toast({
-          title: "Success",
-          description: `Layer "${file.name}" added successfully.`,
+          title: "Succès",
+          description: `La couche "${file.name}" a été ajoutée avec succès.`,
         });
 
       } catch (error) {
         console.error(error);
         toast({
             variant: "destructive",
-            title: "Upload Failed",
-            description: error instanceof Error ? error.message : "Could not parse GeoJSON file.",
+            title: "Échec du téléversement",
+            description: error instanceof Error ? error.message : "Impossible de lire le fichier GeoJSON.",
         });
       } finally {
         // Reset file input
@@ -77,7 +77,7 @@ export default function DataUploader({ onAddLayer }: DataUploaderProps) {
         onClick={() => fileInputRef.current?.click()}
       >
         <Upload className="mr-2 h-4 w-4" />
-        Upload GeoJSON
+        Téléverser GeoJSON
       </Button>
     </div>
   );

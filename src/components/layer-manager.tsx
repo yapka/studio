@@ -22,7 +22,7 @@ export default function LayerManager({
   if (layers.length === 0) {
     return (
       <div className="p-4 text-center text-sm text-muted-foreground">
-        No data layers loaded.
+        Aucune couche de données chargée.
       </div>
     );
   }
@@ -46,7 +46,7 @@ export default function LayerManager({
                   size="icon"
                   className="h-8 w-8"
                   onClick={() => onEditStyle(layer.id)}
-                  aria-label="Edit style"
+                  aria-label="Modifier le style"
                 >
                   <Palette className="h-4 w-4" />
                 </Button>
@@ -55,7 +55,7 @@ export default function LayerManager({
                   size="icon"
                   className="h-8 w-8"
                   onClick={() => onToggleLayerVisibility(layer.id)}
-                  aria-label={layer.visible ? 'Hide layer' : 'Show layer'}
+                  aria-label={layer.visible ? 'Masquer la couche' : 'Afficher la couche'}
                 >
                   {layer.visible ? (
                     <Eye className="h-4 w-4" />
@@ -68,7 +68,7 @@ export default function LayerManager({
                   size="icon"
                   className="h-8 w-8 text-destructive/80 hover:text-destructive"
                   onClick={() => onRemoveLayer(layer.id)}
-                  aria-label="Remove layer"
+                  aria-label="Supprimer la couche"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

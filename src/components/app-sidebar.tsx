@@ -36,7 +36,7 @@ export default function AppSidebar({
       <SidebarHeader>
         <div className="flex items-center gap-2 font-semibold p-2">
             <Globe className="h-6 w-6" />
-            <span>GeoReact White</span>
+            <span>GeoReact Blanc</span>
         </div>
       </SidebarHeader>
       <SidebarSeparator />
@@ -44,7 +44,7 @@ export default function AppSidebar({
         <SidebarGroup>
             <SidebarGroupLabel className="flex items-center gap-2">
                 <Layers className="h-4 w-4" />
-                Data Layers
+                Couches de données
             </SidebarGroupLabel>
             <DataUploader onAddLayer={onAddLayer} />
             <LayerManager

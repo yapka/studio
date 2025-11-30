@@ -15,8 +15,8 @@ export default function LocateButton({ onLocateSuccess }: LocateButtonProps) {
     if (!navigator.geolocation) {
       toast({
         variant: "destructive",
-        title: "Geolocation Error",
-        description: "Geolocation is not supported by your browser.",
+        title: "Erreur de géolocalisation",
+        description: "La géolocalisation n'est pas supportée par votre navigateur.",
       });
       return;
     }
@@ -26,8 +26,8 @@ export default function LocateButton({ onLocateSuccess }: LocateButtonProps) {
       () => {
         toast({
             variant: "destructive",
-            title: "Geolocation Error",
-            description: "Unable to retrieve your location. Please check your browser permissions.",
+            title: "Erreur de géolocalisation",
+            description: "Impossible de récupérer votre position. Veuillez vérifier les autorisations de votre navigateur.",
         });
       }
     );
@@ -35,7 +35,7 @@ export default function LocateButton({ onLocateSuccess }: LocateButtonProps) {
 
   return (
     <div className="absolute bottom-4 right-4 z-10">
-      <Button variant="secondary" size="icon" onClick={handleLocate} aria-label="Find my location">
+      <Button variant="secondary" size="icon" onClick={handleLocate} aria-label="Trouver ma position">
         <Crosshair className="h-5 w-5" />
       </Button>
     </div>

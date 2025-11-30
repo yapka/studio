@@ -23,15 +23,15 @@ export default function StyleEditor({ layer, onUpdateStyle, onClose }: StyleEdit
       <SidebarSeparator />
       <SidebarFooter className="p-4 space-y-4">
         <div className="flex items-center justify-between">
-            <h3 className="font-semibold">Style Editor</h3>
+            <h3 className="font-semibold">Éditeur de style</h3>
             <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onClose}><X className="h-4 w-4" /></Button>
         </div>
         <p className="text-sm text-muted-foreground truncate" title={layer.name}>
-            Editing: <span className="font-medium text-foreground">{layer.name}</span>
+            Édition: <span className="font-medium text-foreground">{layer.name}</span>
         </p>
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="fillColor">Fill Color</Label>
+            <Label htmlFor="fillColor">Couleur de remplissage</Label>
             <div className="flex items-center gap-2">
                 <Input
                 id="fillColor"
@@ -49,7 +49,7 @@ export default function StyleEditor({ layer, onUpdateStyle, onClose }: StyleEdit
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="strokeColor">Stroke Color</Label>
+            <Label htmlFor="strokeColor">Couleur du contour</Label>
             <div className="flex items-center gap-2">
                 <Input
                 id="strokeColor"
@@ -67,7 +67,7 @@ export default function StyleEditor({ layer, onUpdateStyle, onClose }: StyleEdit
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="strokeWeight">Stroke Weight: {layer.style.strokeWeight}px</Label>
+            <Label htmlFor="strokeWeight">Épaisseur du contour: {layer.style.strokeWeight}px</Label>
             <Slider
               id="strokeWeight"
               min={0}

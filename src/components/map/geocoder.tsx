@@ -45,7 +45,7 @@ export default function Geocoder({ onPlaceSelect }: GeocoderProps) {
       <Input
         ref={inputRef}
         type="text"
-        placeholder="Search for a location..."
+        placeholder="Rechercher un lieu..."
         className="w-full pl-9"
       />
     </div>

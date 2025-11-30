@@ -63,12 +63,12 @@ export default function GeoReactApp() {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-background">
         <div className="rounded-lg border bg-card p-6 text-center shadow-lg">
-          <h1 className="text-2xl font-bold text-destructive">Configuration Error</h1>
+          <h1 className="text-2xl font-bold text-destructive">Erreur de configuration</h1>
           <p className="mt-2 text-muted-foreground">
-            Google Maps API key is missing.
+            La clé API Google Maps est manquante.
           </p>
           <p className="mt-4 text-sm text-muted-foreground">
-            Please set the <code className="rounded bg-muted px-1 font-mono text-sm">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code> environment variable.
+            Veuillez définir la variable d'environnement <code className="rounded bg-muted px-1 font-mono text-sm">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code>.
           </p>
         </div>
       </div>

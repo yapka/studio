@@ -49,7 +49,7 @@ export default function MapView({ layers, center, zoom, onCenterChange, onZoomCh
       >
         {layers.map(layer => layer.visible && <GeoJsonLayer key={layer.id} data={layer.data} style={layer.style} />)}
         {userLocation && (
-          <AdvancedMarker position={userLocation} title="Your Location">
+          <AdvancedMarker position={userLocation} title="Votre position">
             <div className="w-4 h-4 rounded-full bg-blue-500 border-2 border-white shadow-md"></div>
           </AdvancedMarker>
         )}
