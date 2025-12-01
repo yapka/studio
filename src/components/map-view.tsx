@@ -27,7 +27,7 @@ function MapEvents({ onCenterChange, onZoomChange }: Pick<MapViewProps, 'onCente
     return null;
 }
 
-// Component to sync map view state
+// Component to sync map view state from props
 function MapViewUpdater({ center, zoom }: { center: [number, number], zoom: number }) {
     const map = useMap();
     
@@ -102,5 +102,5 @@ function MapView({ layers, center, zoom, onCenterChange, onZoomChange }: MapView
   );
 }
 
-// Using React.memo to prevent unnecessary re-renders
+// Using React.memo to prevent unnecessary re-renders of MapView which can cause issues with Leaflet
 export default memo(MapView);
