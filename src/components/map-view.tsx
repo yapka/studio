@@ -2,7 +2,7 @@
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMap, useMapEvents } from 'react-leaflet';
 import type { MapLayer } from '@/lib/types';
 import LocateButton from './map/locate-button';
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import type { LatLngExpression, GeoJSON as LeafletGeoJSON } from 'leaflet';
 import L from 'leaflet';
 
@@ -35,7 +35,7 @@ function MapViewUpdater({ center, zoom }: { center: [number, number], zoom: numb
     return null;
 }
 
-export default function MapView({ layers, center, zoom, onCenterChange, onZoomChange }: MapViewProps) {
+function MapView({ layers, center, zoom, onCenterChange, onZoomChange }: MapViewProps) {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
 
   const handleLocateSuccess = (position: GeolocationPosition) => {
@@ -94,3 +94,5 @@ export default function MapView({ layers, center, zoom, onCenterChange, onZoomCh
     </div>
   );
 }
+
+export default memo(MapView);
