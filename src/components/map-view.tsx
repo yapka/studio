@@ -2,8 +2,8 @@
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMap, useMapEvents } from 'react-leaflet';
 import type { MapLayer } from '@/lib/types';
 import LocateButton from './map/locate-button';
-import { useState, memo } from 'react';
-import type { LatLngExpression, GeoJSON as LeafletGeoJSON } from 'leaflet';
+import { useState, memo, useEffect } from 'react';
+import type { Map as LeafletMap } from 'leaflet';
 import L from 'leaflet';
 
 type MapViewProps = {
@@ -31,7 +31,15 @@ function MapEvents({ onCenterChange, onZoomChange }: Pick<MapViewProps, 'onCente
 // Component to sync map view state
 function MapViewUpdater({ center, zoom }: { center: [number, number], zoom: number }) {
     const map = useMap();
-    map.setView(center, zoom);
+    
+    useEffect(() => {
+        const currentCenter = map.getCenter();
+        const currentZoom = map.getZoom();
+        if (currentCenter.lat !== center[0] || currentCenter.lng !== center[1] || currentZoom !== zoom) {
+             map.setView(center, zoom);
+        }
+    }, [center, zoom, map]);
+
     return null;
 }
 
@@ -95,4 +103,5 @@ function MapView({ layers, center, zoom, onCenterChange, onZoomChange }: MapView
   );
 }
 
+// Using React.memo to prevent unnecessary re-renders
 export default memo(MapView);
