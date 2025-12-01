@@ -1,13 +1,10 @@
 import type { FeatureCollection } from 'geojson';
+import type { PathOptions } from 'leaflet';
 
 export interface MapLayer {
   id: string;
   name: string;
   data: FeatureCollection;
   visible: boolean;
-  style: {
-    fillColor: string;
-    strokeColor: string;
-    strokeWeight: number;
-  };
+  style: PathOptions;
 }

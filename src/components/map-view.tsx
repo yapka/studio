@@ -1,59 +1,95 @@
 'use client';
-import { Map, AdvancedMarker } from '@vis.gl/react-google-maps';
-import { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMap, useMapEvents } from 'react-leaflet';
 import type { MapLayer } from '@/lib/types';
-import GeoJsonLayer from './map/geojson-layer';
 import LocateButton from './map/locate-button';
+import { useState } from 'react';
+import type { LatLngExpression, GeoJSON as LeafletGeoJSON } from 'leaflet';
+import L from 'leaflet';
 
 type MapViewProps = {
   layers: MapLayer[];
-  center: { lat: number; lng: number };
+  center: [number, number];
   zoom: number;
-  onCenterChange: (center: { lat: number; lng: number }) => void;
+  onCenterChange: (center: [number, number]) => void;
   onZoomChange: (zoom: number) => void;
 };
 
-export default function MapView({ layers, center, zoom, onCenterChange, onZoomChange }: MapViewProps) {
-  const [mapStyle, setMapStyle] = useState<google.maps.MapTypeStyle[]>([]);
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+// Component to handle map events
+function MapEvents({ onCenterChange, onZoomChange }: Pick<MapViewProps, 'onCenterChange' | 'onZoomChange'>) {
+    const map = useMapEvents({
+      moveend: () => {
+        const center = map.getCenter();
+        onCenterChange([center.lat, center.lng]);
+      },
+      zoomend: () => {
+        onZoomChange(map.getZoom());
+      },
+    });
+    return null;
+}
 
-  useEffect(() => {
-    fetch('/map-style.json')
-      .then(res => res.json())
-      .then(setMapStyle)
-      .catch(() => console.error('Failed to load map style.'));
-  }, []);
+// Component to sync map view state
+function MapViewUpdater({ center, zoom }: { center: [number, number], zoom: number }) {
+    const map = useMap();
+    map.setView(center, zoom);
+    return null;
+}
+
+export default function MapView({ layers, center, zoom, onCenterChange, onZoomChange }: MapViewProps) {
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
 
   const handleLocateSuccess = (position: GeolocationPosition) => {
-    const newLocation = {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude,
-    };
+    const newLocation: [number, number] = [
+      position.coords.latitude,
+      position.coords.longitude,
+    ];
     setUserLocation(newLocation);
     onCenterChange(newLocation);
     onZoomChange(15);
   };
 
+  const onEachFeature = (feature: GeoJSON.Feature, layer: L.Layer) => {
+    if (feature.properties) {
+      const popupContent = Object.entries(feature.properties)
+        .map(([key, value]) => `<b>${key}:</b> ${value}`)
+        .join('<br/>');
+      layer.bindPopup(popupContent);
+    }
+  };
+
+  const userMarkerIcon = L.divIcon({
+    html: '<div class="w-4 h-4 rounded-full bg-blue-500 border-2 border-white shadow-md"></div>',
+    className: '',
+    iconSize: [16, 16],
+    iconAnchor: [8, 8],
+  });
+
   return (
     <div className="h-full w-full relative">
-      <Map
-        center={center}
-        zoom={zoom}
-        onCenterChanged={ev => onCenterChange(ev.detail.center)}
-        onZoomChanged={ev => onZoomChange(ev.detail.zoom)}
-        mapId="georeact_map"
-        styles={mapStyle}
-        gestureHandling={'greedy'}
-        disableDefaultUI={true}
-        className="h-full w-full border-0"
-      >
-        {layers.map(layer => layer.visible && <GeoJsonLayer key={layer.id} data={layer.data} style={layer.style} />)}
-        {userLocation && (
-          <AdvancedMarker position={userLocation} title="Votre position">
-            <div className="w-4 h-4 rounded-full bg-blue-500 border-2 border-white shadow-md"></div>
-          </AdvancedMarker>
+      <MapContainer center={center} zoom={zoom} scrollWheelZoom={true} className="h-full w-full z-0">
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <MapViewUpdater center={center} zoom={zoom} />
+        <MapEvents onCenterChange={onCenterChange} onZoomChange={onZoomChange} />
+        
+        {layers.map(layer =>
+          layer.visible && (
+            <GeoJSON 
+              key={layer.id} 
+              data={layer.data} 
+              style={() => layer.style}
+              onEachFeature={onEachFeature}
+            />
+          )
         )}
-      </Map>
+        {userLocation && (
+          <Marker position={userLocation} icon={userMarkerIcon}>
+            <Popup>Votre position</Popup>
+          </Marker>
+        )}
+      </MapContainer>
       <LocateButton onLocateSuccess={handleLocateSuccess} />
     </div>
   );

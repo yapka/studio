@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
-import { APIProvider } from '@vis.gl/react-google-maps';
+import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import {
   SidebarProvider,
   Sidebar,
@@ -9,14 +9,17 @@ import {
 } from '@/components/ui/sidebar';
 import AppHeader from '@/components/app-header';
 import AppSidebar from '@/components/app-sidebar';
-import MapView from '@/components/map-view';
 import type { MapLayer } from '@/lib/types';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+const MapView = dynamic(() => import('@/components/map-view'), {
+  ssr: false,
+  loading: () => <Skeleton className="h-full w-full" />,
+});
 
 export default function GeoReactApp() {
   const [layers, setLayers] = useState<MapLayer[]>([]);
-  const [center, setCenter] = useState({ lat: 48.8566, lng: 2.3522 });
+  const [center, setCenter] = useState<[number, number]>([48.8566, 2.3522]);
   const [zoom, setZoom] = useState(5);
   const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
 
@@ -52,31 +55,12 @@ export default function GeoReactApp() {
     );
   };
   
-  const handleSearchResult = useCallback((place: google.maps.places.PlaceResult) => {
-    if (place.geometry?.location) {
-        setCenter(place.geometry.location.toJSON());
-        setZoom(15);
-    }
-  }, []);
+  const handleSearchResult = (result: { lat: number; lng: number; }) => {
+    setCenter([result.lat, result.lng]);
+    setZoom(15);
+  };
   
-  if (!API_KEY) {
-    return (
-      <div className="flex h-screen w-screen items-center justify-center bg-background">
-        <div className="rounded-lg border bg-card p-6 text-center shadow-lg">
-          <h1 className="text-2xl font-bold text-destructive">Erreur de configuration</h1>
-          <p className="mt-2 text-muted-foreground">
-            La clé API Google Maps est manquante.
-          </p>
-          <p className="mt-4 text-sm text-muted-foreground">
-            Veuillez définir la variable d'environnement <code className="rounded bg-muted px-1 font-mono text-sm">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code>.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <APIProvider apiKey={API_KEY}>
       <SidebarProvider>
         <div className="flex h-screen w-full flex-col">
           <AppHeader onSearchResult={handleSearchResult} />
@@ -104,6 +88,5 @@ export default function GeoReactApp() {
           </div>
         </div>
       </SidebarProvider>
-    </APIProvider>
   );
 }

@@ -63,8 +63,9 @@ export default function GeoserverLayerAdder({ onAddLayer }: GeoserverLayerAdderP
         visible: true,
         style: {
           fillColor: '#4A90E2',
-          strokeColor: '#3B82F6',
-          strokeWeight: 1,
+          color: '#3B82F6',
+          weight: 1,
+          fillOpacity: 0.7,
         },
       });
 

@@ -5,7 +5,7 @@ import { Globe } from 'lucide-react';
 import Geocoder from './map/geocoder';
 
 type AppHeaderProps = {
-  onSearchResult: (place: google.maps.places.PlaceResult) => void;
+  onSearchResult: (result: { lat: number, lng: number }) => void;
 };
 
 export default function AppHeader({ onSearchResult }: AppHeaderProps) {

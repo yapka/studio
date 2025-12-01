@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { X } from 'lucide-react';
 import type { MapLayer } from '@/lib/types';
+import type { PathOptions } from 'leaflet';
 
 type StyleEditorProps = {
   layer: MapLayer;
@@ -14,10 +15,14 @@ type StyleEditorProps = {
 };
 
 export default function StyleEditor({ layer, onUpdateStyle, onClose }: StyleEditorProps) {
-  const handleStyleChange = (key: keyof MapLayer['style'], value: string | number) => {
+  const handleStyleChange = (key: keyof PathOptions, value: string | number) => {
     onUpdateStyle(layer.id, { [key]: value });
   };
   
+  const fillColor = layer.style.fillColor || '#4A90E2';
+  const color = layer.style.color || '#3B82F6';
+  const weight = layer.style.weight || 1;
+
   return (
     <>
       <SidebarSeparator />
@@ -37,12 +42,12 @@ export default function StyleEditor({ layer, onUpdateStyle, onClose }: StyleEdit
                 id="fillColor"
                 type="color"
                 className="w-12 h-10 p-1"
-                value={layer.style.fillColor}
+                value={fillColor}
                 onChange={e => handleStyleChange('fillColor', e.target.value)}
                 />
                 <Input 
                     type="text"
-                    value={layer.style.fillColor}
+                    value={fillColor}
                     onChange={e => handleStyleChange('fillColor', e.target.value)}
                     className="h-10"
                 />
@@ -55,26 +60,26 @@ export default function StyleEditor({ layer, onUpdateStyle, onClose }: StyleEdit
                 id="strokeColor"
                 type="color"
                 className="w-12 h-10 p-1"
-                value={layer.style.strokeColor}
-                onChange={e => handleStyleChange('strokeColor', e.target.value)}
+                value={color}
+                onChange={e => handleStyleChange('color', e.target.value)}
                 />
                 <Input 
                     type="text"
-                    value={layer.style.strokeColor}
-                    onChange={e => handleStyleChange('strokeColor', e.target.value)}
+                    value={color}
+                    onChange={e => handleStyleChange('color', e.target.value)}
                     className="h-10"
                 />
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="strokeWeight">Épaisseur du contour: {layer.style.strokeWeight}px</Label>
+            <Label htmlFor="strokeWeight">Épaisseur du contour: {weight}px</Label>
             <Slider
               id="strokeWeight"
               min={0}
               max={10}
               step={0.5}
-              value={[layer.style.strokeWeight]}
-              onValueChange={([value]) => handleStyleChange('strokeWeight', value)}
+              value={[weight]}
+              onValueChange={([value]) => handleStyleChange('weight', value)}
             />
           </div>
         </div>
