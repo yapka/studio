@@ -3,7 +3,6 @@ import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMap, useMapEvents }
 import type { MapLayer } from '@/lib/types';
 import LocateButton from './map/locate-button';
 import { useState, memo, useEffect } from 'react';
-import type { Map as LeafletMap } from 'leaflet';
 import L from 'leaflet';
 
 type MapViewProps = {
