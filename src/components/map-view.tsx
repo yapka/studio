@@ -13,21 +13,7 @@ type MapViewProps = {
   onZoomChange: (zoom: number) => void;
 };
 
-// Component to handle map events
-function MapEvents({ onCenterChange, onZoomChange }: Pick<MapViewProps, 'onCenterChange' | 'onZoomChange'>) {
-    const map = useMapEvents({
-      moveend: () => {
-        const center = map.getCenter();
-        onCenterChange([center.lat, center.lng]);
-      },
-      zoomend: () => {
-        onZoomChange(map.getZoom());
-      },
-    });
-    return null;
-}
-
-// Component to sync map view state from props
+// Ce composant met à jour la carte lorsque les props (center, zoom) changent.
 function MapViewUpdater({ center, zoom }: { center: [number, number], zoom: number }) {
     const map = useMap();
     
@@ -42,6 +28,21 @@ function MapViewUpdater({ center, zoom }: { center: [number, number], zoom: numb
     return null;
 }
 
+// Ce composant met à jour l'état parent lorsque l'utilisateur interagit avec la carte.
+function MapEvents({ onCenterChange, onZoomChange }: Pick<MapViewProps, 'onCenterChange' | 'onZoomChange'>) {
+    useMapEvents({
+      moveend: (e) => {
+        const center = e.target.getCenter();
+        onCenterChange([center.lat, center.lng]);
+      },
+      zoomend: (e) => {
+        onZoomChange(e.target.getZoom());
+      },
+    });
+    return null;
+}
+
+
 function MapView({ layers, center, zoom, onCenterChange, onZoomChange }: MapViewProps) {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
 
@@ -51,7 +52,7 @@ function MapView({ layers, center, zoom, onCenterChange, onZoomChange }: MapView
       position.coords.longitude,
     ];
     setUserLocation(newLocation);
-    onCenterChange(newLocation);
+    onCenterChange(newLocation); // Met à jour le centre dans l'état parent
     onZoomChange(15);
   };
 
@@ -73,11 +74,18 @@ function MapView({ layers, center, zoom, onCenterChange, onZoomChange }: MapView
 
   return (
     <div className="h-full w-full relative">
-      <MapContainer center={center} zoom={zoom} scrollWheelZoom={true} className="h-full w-full z-0">
+      <MapContainer 
+        center={center} 
+        zoom={zoom} 
+        scrollWheelZoom={true} 
+        className="h-full w-full z-0"
+        // Ne pas passer de props qui changent ici pour éviter la réinitialisation
+      >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        {/* Les composants internes gèrent les mises à jour */}
         <MapViewUpdater center={center} zoom={zoom} />
         <MapEvents onCenterChange={onCenterChange} onZoomChange={onZoomChange} />
         
@@ -102,5 +110,4 @@ function MapView({ layers, center, zoom, onCenterChange, onZoomChange }: MapView
   );
 }
 
-// Using React.memo to prevent unnecessary re-renders of MapView which can cause issues with Leaflet
 export default memo(MapView);
