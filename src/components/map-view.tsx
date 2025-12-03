@@ -79,7 +79,7 @@ function MapView({ layers, center, zoom, onCenterChange, onZoomChange }: MapView
         zoom={zoom} 
         scrollWheelZoom={true} 
         className="h-full w-full z-0"
-        // Ne pas passer de props qui changent ici pour éviter la réinitialisation
+        // Les props qui changent ne sont pas passées ici pour éviter la réinitialisation
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
